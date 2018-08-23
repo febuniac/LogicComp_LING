@@ -13,4 +13,3 @@ Esta linguagem será uma linguagem procedural de alto nível e compilada, que te
 - Inputs de usuários serão mais fácil de entrar
 - Outputs de respostas podem ser vistos com print ou apenas colocando "output =..."
 - Os programas irão rodar em uma main() principal.
-- Pensar em um possível "modo debug"
