@@ -1,0 +1,67 @@
+expression
+   : term '+' term
+   | term '-' term
+   ;
+
+term
+   : factor '*' factor
+   | factor '/' factor
+   ;
+
+factor
+   : '+' factor
+   | '-' factor
+   | number
+   | '(' expression ')'
+   | identificator
+   ;
+
+identificator
+   : STRING+ [STRING+]
+   | STRING+ [INT+]
+   | STRING+ ['_']
+   ;
+
+attribution
+    : identificator+ ['=' expression]
+    ;
+
+ command 
+    : attribution
+    | commands
+    ;
+
+commands
+    :'{' command ';'+ [command ';'] '}''
+    ;
+    
+number
+   : FLOAT
+   ;
+
+STRING
+   : [a-z]+
+   | [A-Z]+
+   ;
+
+FLOAT
+   : INT+ ['.' INT+]
+   ;
+
+INT
+   : [0-9]
+   ;
+
+
+
+#comandos = “{”, comando, “;”, { comando, “;” }, “}” ;
+# comando = atribuição | comandos ;
+# atribuição = identificador, “=”, expressão ;
+# expressão = termo, { (“+” | “-”), termo } ;
+# termo = fator, { (“*” | “/”), fator } ;
+# fator = (“+” | “-”), fator | número | “(”, expressão, “)” | identificador ;
+# identificador = letra, { letra | digito | “_” } ;
+# número = dígito, { dígito } ;
+
+# letra = ( a | ... | z | A | ... | Z ) ;
+# dígito = ( 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 ) ;
