@@ -1,6 +1,47 @@
+program
+   : statement+
+   ;
+ 
+class
+    : identificator+ '()'" '[]'
+    |statement
+    ;
+
+funct
+    : identificator+ '()'" '{}'
+    |statement
+    ;
+
+statement
+   : 'if' paren_expr statement '{}'
+   | 'if' paren_expr statement ;'{}''else' statement'{}'
+   | 'while' paren_expr statement'{}'
+   | 'print' paren_expr ';'
+   | 'print' '('identifier')' ';'
+   | expr ';'
+   ;
+
+paren_expression
+    : '(' expression ')'
+    ;  
+
+bools
+    : expression '//' expression
+    | expression '&&' expression
+    | expression '!'  expression
+    ;
+
+relats
+    : expression '>' expression
+    | expression '<' expression
+    | expression '=='  expression
+    | expression '!='  expression
+    ;
+  
 expression
-   : term '+' term
-   | term '-' term
+   :term 
+   |term '+' term
+   |term '-' term
    ;
 
 term
@@ -26,15 +67,6 @@ attribution
     : identificator+ ['=' expression]
     ;
 
- command 
-    : attribution
-    | commands
-    ;
-
-commands
-    :'{' command ';'+ [command ';'] '}''
-    ;
-    
 number
    : FLOAT
    ;
@@ -52,16 +84,3 @@ INT
    : [0-9]
    ;
 
-
-
-#comandos = “{”, comando, “;”, { comando, “;” }, “}” ;
-# comando = atribuição | comandos ;
-# atribuição = identificador, “=”, expressão ;
-# expressão = termo, { (“+” | “-”), termo } ;
-# termo = fator, { (“*” | “/”), fator } ;
-# fator = (“+” | “-”), fator | número | “(”, expressão, “)” | identificador ;
-# identificador = letra, { letra | digito | “_” } ;
-# número = dígito, { dígito } ;
-
-# letra = ( a | ... | z | A | ... | Z ) ;
-# dígito = ( 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 ) ;
