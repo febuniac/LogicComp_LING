@@ -2,20 +2,15 @@ program
    : statement+
    ;
  
-class
-    : identificator+ '()'" '[]'
-    |statement
-    ;
-
 funct
-    : identificator+ '()'" '{}'
-    |statement
+    : identifier+  "(" variable{ "," variable } ")" ':'
+    |statement   
     ;
 
 statement
-   : 'if' paren_expr statement '{}'
-   | 'if' paren_expr statement ;'{}''else' statement'{}'
-   | 'while' paren_expr statement'{}'
+   : 'if' paren_expr statement 
+   | 'if' paren_expr statement {'else' statement}
+   | 'while' paren_expr statement
    | 'print' paren_expr ';'
    | 'print' '('identifier')' ';'
    | expr ';'
@@ -57,14 +52,18 @@ factor
    | identificator
    ;
 
-identificator
+identifier
    : STRING+ [STRING+]
    | STRING+ [INT+]
    | STRING+ ['_']
    ;
 
+variable
+    : identifier
+    ;
+
 attribution
-    : identificator+ ['=' expression]
+    : identifier+ ['=' expression]
     ;
 
 number
