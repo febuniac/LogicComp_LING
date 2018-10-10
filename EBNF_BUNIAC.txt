@@ -3,69 +3,62 @@ program
    ;
  
 funct
-    : 'f' variable  "(" variable {"," variable} ")" ':'
-    |'{'statement '}'   
+    : 'f', variable , "(", variable, {",", variable} ,")" ,':'
+    |'{',statement ,'}'   
     ;
 
 statement
-   : 'if' paren_expr '{'statement'}' ':'
-   | 'if' paren_expr '{'statement'}' 'else' '{'statement'}' ':'
-   | 'while' paren_expr '{'statement'}' ':'
-   | 'print' paren_expr ';'
+   : 'if', paren_expr, '{',statement,'}' ,':'
+   | 'if', paren_expr ,'{',statement,'}' ,'else' ,'{',statement,'}' ,':'
+   | 'while', paren_expr, '{',statement,'}' ,':'
+   | 'print', paren_expr, ';'
    | atribution
    ;
 
 paren_expression
-    : '(' expression ')'
-    | '(' bools ')'
-    | '(' relats ')'
+    : '(', expression, ')'
+    | '(' ,bools, ')'
+    | '(' ,relats, ')'
     ;  
 
 bools
-    : expression '//' expression
-    | expression '&&' expression
-    | expression '!'  expression
+    : expression, '//', expression
+    | expression, '&&', expression
+    | expression, '!',  expression
     ;
 
 relats
-    : expression '>' expression
-    | expression '<' expression
-    | expression '=='  expression
-    | expression '!='  expression
+    : expression, '>',  expression
+    | expression, '<',  expression
+    | expression, '==', expression
+    | expression, '!=', expression
     ;
   
 expression
    :term 
-   |term '+' term
-   |term '-' term
+   |term, '+', term
+   |term, '-', term
    ;
 
 term
-   : factor '*' factor
-   | factor '/' factor
+   : factor, '*', factor
+   | factor, '/', factor
    ;
 
 factor
-   : '+' factor
-   | '-' factor
+   : '+', factor
+   | '-', factor
    | number
-   | '(' expression ')'
+   | '(',expression,')'
    | variable
    ;
 
-variable
-    : identifier
-    ;
-
-
 attribution
-    : variable ['=' expression]
+    : variable, '=', expression
     ;
 
-identifier
-   : STRING+ [STRING+]
-   | STRING+ [INT+]
-   | STRING+ ['_']
+variable
+   : STRING, {STRING, INT, '_'}
    ;
 
 number
@@ -73,15 +66,21 @@ number
    ;
 
 STRING
-   : [a-z]+
-   | [A-Z]+
+   :"A" | "B" | "C" | "D" | "E" | "F" | "G"
+    | "H" | "I" | "J" | "K" | "L" | "M" | "N"
+    | "O" | "P" | "Q" | "R" | "S" | "T" | "U"
+    | "V" | "W" | "X" | "Y" | "Z" | "a" | "b"
+    | "c" | "d" | "e" | "f" | "g" | "h" | "i"
+    | "j" | "k" | "l" | "m" | "n" | "o" | "p"
+    | "q" | "r" | "s" | "t" | "u" | "v" | "w"
+    | "x" | "y" | "z" ;
    ;
 
 FLOAT
-   : INT+ ['.' INT+]
+   : INT, ['.', INT]
    ;
 
 INT
-   : [0-9]
+   : "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
    ;
 
