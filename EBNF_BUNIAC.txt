@@ -9,7 +9,7 @@ funct
 
 statement
    : 'if' paren_expr '{'statement '}'
-   | 'if' paren_expr '{'statement {'else' statement}'}'
+   | 'if' paren_expr '{'statement '}' 'else' '{'statement'}'
    | 'while' paren_expr '{'statement'}'
    | 'print' paren_expr ';'
    | 'print' '('identifier')' ';'
