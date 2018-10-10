@@ -3,19 +3,22 @@ program
    ;
  
 funct
-    : identifier+  "(" variable {"," variable} ")" ':'
+    : 'f' variable  "(" variable {"," variable} ")" ':'
     |'{'statement '}'   
     ;
 
 statement
-   : 'if' paren_expr '{'statement'}'
-   | 'if' paren_expr '{'statement'}' 'else' '{'statement'}'
-   | 'while' paren_expr '{'statement'}'
+   : 'if' paren_expr '{'statement'}' ':'
+   | 'if' paren_expr '{'statement'}' 'else' '{'statement'}' ':'
+   | 'while' paren_expr '{'statement'}' ':'
    | 'print' paren_expr ';'
+   | atribution
    ;
 
 paren_expression
     : '(' expression ')'
+    | '(' bools ')'
+    | '(' relats ')'
     ;  
 
 bools
@@ -47,22 +50,23 @@ factor
    | '-' factor
    | number
    | '(' expression ')'
-   | identifier
-   ;
-
-identifier
-   : STRING+ [STRING+]
-   | STRING+ [INT+]
-   | STRING+ ['_']
+   | variable
    ;
 
 variable
     : identifier
     ;
 
+
 attribution
-    : identifier+ ['=' expression]
+    : variable ['=' expression]
     ;
+
+identifier
+   : STRING+ [STRING+]
+   | STRING+ [INT+]
+   | STRING+ ['_']
+   ;
 
 number
    : FLOAT
