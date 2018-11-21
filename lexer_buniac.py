@@ -23,14 +23,14 @@ class Lexer():
         self.lexer.add('MULT', r'\*')
         self.lexer.add('DIV', r'\\')
         # Boolean Operators
-        self.lexer.add('OR', r'\//')
-        self.lexer.add('AND', r'\&&')
+        self.lexer.add('OR', r'\/\/')
+        self.lexer.add('AND', r'\&\&')
         self.lexer.add('NOT', r'\!')
         # Relational Operators
         self.lexer.add('BIGGER_THAN', r'\>')
         self.lexer.add('SMALLER_THAN', r'\<')
         self.lexer.add('EQUAL_TO', r'\=')
-        self.lexer.add('DIFF', r'\!=')
+        self.lexer.add('DIFF', r'\!\=')
         # Number
         self.lexer.add('NUMBER', r'\d+')
         # Types 

@@ -36,15 +36,7 @@ funct
     @self.pg.production('statement : PRINT paren_expression SEMI_COLON')
     @self.pg.production('statement : attribution')
     def statement(p):
-        left = p[0]
-        right = p[2]
-        operator = p[1]
-        if operator.gettokentype() == 'SUM':
-            return Sum(left, right)
-        elif operator.gettokentype() == 'SUB':
-            return Sub(left, right)
-        elif operator.gettokentype() == None:
-        return left
+        
         
 
  #_____________PAREN_EXPRESSION__________________________________________  
@@ -57,7 +49,7 @@ funct
     @self.pg.production('paren_expression : OPEN_PAR booleans CLOSE_PAR')
     @self.pg.production('paren_expression : OPEN_PAR relational_expression CLOSE_PAR')
     def paren_expression(p):
-        
+        return p[1]
 
  #_____________BOOLEANS__________________________________________  
 # bools
@@ -77,7 +69,7 @@ funct
         elif bool_operator.gettokentype() == 'AND':
             return And(left, right)
         elif bool_operator.gettokentype() == 'NOT':
-            return Not(left, right)
+            return Not(left)
         
  #_____________RELATIONAL_EXPRESSION___________________________________________  
 # relats
@@ -133,10 +125,10 @@ funct
     def term(p):
         left = p[0]
         right = p[2]
-        relat_operator = p[1]
-        if relat_operator.gettokentype() == 'MULT':
+        t_operator = p[1]
+        if t_operator.gettokentype() == 'MULT':
             return Multiply(left, right)
-        elif relat_operator.gettokentype() == 'DIV':
+        elif t_operator.gettokentype() == 'DIV':
             return Divide(left, right)
 
  #_____________FACTOR___________________________________________  
@@ -153,6 +145,20 @@ funct
     @self.pg.production('factor : OPEN_PAR expression CLOSE_PAR')
     @self.pg.production('factor : variable')
     def factor(p):
+        left = p[0]
+        right = p[2]
+        middle = p[1]
+    if left.gettokentype() == 'SUM':
+        return Plus(middle)
+    elif left.gettokentype() == 'SUB':
+        return Minus(middle) 
+    elif left.gettokentype() == 'number':
+        return left
+    elif middle.gettokentype() == 'expression':
+        return middle
+    elif left.gettokentype() == 'variable':
+        return left       
+        
     
  #_____________ATTRIBUTION___________________________________________  
 # attribution
@@ -160,10 +166,19 @@ funct
 #     ;
     @self.pg.production('attribution : variable EQUAL_TO expression')
     def attribution(p):
+        return
+        
  #_____________VARIABLE___________________________________________  
-variable
-   : STRING, {STRING, INT, '_'}
-   ;
+# variable
+#    : STRING, {STRING, INT, '_'}
+#    ;
+@self.pg.production('expression : STRING')
+@self.pg.production('expression : STRINGINT')
+@self.pg.production('expression : STRING_')
+@self.pg.production('expression : STRING_STRING')
+@self.pg.production('expression : STRING_INT')
+    def variable(p):
+        return String(p[0].value)
  #_____________NUMBER___________________________________________  
 # number
 #    : FLOAT
@@ -172,34 +187,38 @@ variable
         def number(p):
             return Number(p[0].value)
  #____________STRING__________________________________________  
-STRING
-   :  "A" | "B" | "C" | "D" | "E" | "F" | "G"
-    | "H" | "I" | "J" | "K" | "L" | "M" | "N"
-    | "O" | "P" | "Q" | "R" | "S" | "T" | "U"
-    | "V" | "W" | "X" | "Y" | "Z" 
-    | "a" | "b"| "c" | "d" | "e" | "f" | "g" 
-    | "h" | "i"| "j" | "k" | "l" | "m" | "n" 
-    | "o" | "p"| "q" | "r" | "s" | "t" | "u" 
-    | "v" | "w"| "x" | "y" | "z" ;
-   ;
+# STRING
+#    :  "A" | "B" | "C" | "D" | "E" | "F" | "G"
+#     | "H" | "I" | "J" | "K" | "L" | "M" | "N"
+#     | "O" | "P" | "Q" | "R" | "S" | "T" | "U"
+#     | "V" | "W" | "X" | "Y" | "Z" 
+#     | "a" | "b"| "c" | "d" | "e" | "f" | "g" 
+#     | "h" | "i"| "j" | "k" | "l" | "m" | "n" 
+#     | "o" | "p"| "q" | "r" | "s" | "t" | "u" 
+#     | "v" | "w"| "x" | "y" | "z" ;
+#    ;
+@self.pg.production('expression : STRING')
+    def string(p):
+        return String(p[0].value)
  #_____________FLOAT___________________________________________  
-FLOAT
-   : INT, ['.', INT]
-   ;
+# FLOAT
+#    : INT, ['.', INT]
+#    ;
+@self.pg.production('expression : FLOAT')
+@self.pg.production('expression : INT.INT')
+    def float(p):
+        return Number(p[0].value)
  #_____________INTEGER___________________________________________  
-INT
-   : "0"|"1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
-   ;
+# INT
+#    : "0"|"1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+#    ;
+@self.pg.production('expression : INT')
+    def integer(p):
+        return Number(p[0].value)
 
+@self.pg.error
+def error_handle(token):
+    raise ValueError(token)
 
-    
-        
-
-
-
-        @self.pg.error
-        def error_handle(token):
-            raise ValueError(token)
-
-    def get_parser(self):
-        return self.pg.build()
+def get_parser(self):
+    return self.pg.build()
