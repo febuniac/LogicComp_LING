@@ -3,15 +3,15 @@ program
    ;
  
 funct
-    : 'f', variable , "(", variable, {",", variable} ,")" ,':'
+    : 'F', variable , "(", variable, {",", variable} ,")" ,':'
     |'{',statement ,'}'   
     ;
 
 statement
-   : 'if', paren_expr, '{',statement,'}' ,':'
-   | 'if', paren_expr ,'{',statement,'}' ,'else' ,'{',statement,'}' ,':'
-   | 'while', paren_expr, '{',statement,'}' ,':'
-   | 'print', paren_expr, ';'
+   : 'I', paren_expr, '{',statement,'}' ,':'
+   | 'I', paren_expr ,'{',statement,'}' ,'E' ,'{',statement,'}' ,':'
+   | 'W', paren_expr, '{',statement,'}' ,':'
+   | 'P', paren_expr, ';'
    | atribution
    ;
 
