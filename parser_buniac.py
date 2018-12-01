@@ -1,5 +1,6 @@
+#https://rply.readthedocs.io/en/latest/users-guide/parsers.html
 from rply import ParserGenerator
-from ast_buniac import Number, Sum, Sub, Print,If,
+from ast_buniac import (Number,String,BinaryOp,UnOp Sum, Sub, Multiply,Divide,Or,And,Not,Bigger,Smaller,Different,Plus,Minus, Print,If,IfElse)
 
 class Parser():
     def __init__(self):
@@ -7,22 +8,28 @@ class Parser():
             # A list of all token names accepted by the parser.
             ['NUMBER', 'PRINT','SCANF', 'OPEN_KEY','CLOSE_KEY', 'OPEN_PAR', 'CLOSE_PAR',
              'SEMI_COLON','DOTS','COMMA', 'SUM', 'SUB','MULT','DIV','OR','AND','NOT','BIGGER_THAN',
-             'SMALLER_THAN','EQUAL_TO','DIFF','INT','CHAR','VOID','WHILE','IF','ELSE','FUNC']
+             'SMALLER_THAN','EQUAL_TO','DIFF','INT','CHAR','VOID','WHILE','IF','ELSE','FUNC','QUOTE'],
+        
+        precedence=[
+            ('left', ['PLUS', 'MINUS']),
+            ('left', ['MUL', 'DIV'])
+            ('left', ['AND', 'OR'])]
         )
- #_____________PROGRAM___________________________________________ 
+#___________PROGRAM___________________________________________ 
     def parse(self):
         @self.pg.production('program : statement')
         def program(p):
             return p[0]
-
 
  #_____________FUNCTION___________________________________________   
 # funct
 #     : 'f', variable , "(", variable, {",", variable} ,")" ,':'
 #     |'{',statement ,'}'   
 #     ;
-    # @self.pg.production('statement : FUNC variable OPEN_PAREN variable OPEN_KEY COMMA variable CLOSE_KEY CLOSE_PAREN DOTS')
-    # @self.pg.production('statement : OPEN_KEY statement CLOSE_KEY')
+    @self.pg.production('statement : FUNC variable OPEN_PAREN variable OPEN_KEY COMMA variable CLOSE_KEY CLOSE_PAREN DOTS')
+    def function(p):
+            return Function(p[1],p[3],p[5])
+    @self.pg.production('statement : OPEN_KEY statement CLOSE_KEY')
 
  #_____________STATEMENT___________________________________________  
 #     statement
@@ -32,7 +39,6 @@ class Parser():
 #    | 'print', paren_expr, ';'
 #    | atribution
 #    ;''
-
         @self.pg.production('statement : IF paren_expression OPEN_KEY statement CLOSE_KEY DOTS')
         def statement_if(p):
             return If( p[1], p[3])
@@ -68,10 +74,10 @@ class Parser():
     #     | expression, '&&', expression
     #     | expression, '!',  expression
     #     ;
-        @self.pg.production('booleans : expression OR expression')
-        @self.pg.production('booleans : expression AND expression')
+        @self.pg.production('booleans : expression OR expression',precedence='OR')
+        @self.pg.production('booleans : expression AND expression',precedence='AND')
         @self.pg.production('booleans : expression NOT expression')
-        def booleans(p):
+        def booleans(p):    
             left = p[0]
             right = p[2]
             bool_operator = p[1]
@@ -113,8 +119,8 @@ class Parser():
     #    |term, '-', term
     #    ;
             @self.pg.production('expression : term')
-            @self.pg.production('expression : term SUM term')
-            @self.pg.production('expression : term SUB term')
+            @self.pg.production('expression : term SUM term',precedence='PLUS')
+            @self.pg.production('expression : term SUB term',precedence='MINUS')
             def expression(p):
                 left = p[0]
                 right = p[2]
@@ -131,8 +137,8 @@ class Parser():
     #    : factor, '*', factor
     #    | factor, '/', factor
     #    ;
-        @self.pg.production('term : factor MULT factor')
-        @self.pg.production('term : factor DIV factor')
+        @self.pg.production('term : factor MULT factor',precedence='MUL')
+        @self.pg.production('term : factor DIV factor',precedence='DIV')
         def term(p):
             left = p[0]
             right = p[2]
@@ -226,6 +232,11 @@ class Parser():
         @self.pg.production('expression : INT')
         def integer(p):
             return Number(p[0].value)
+        
+   # _____________TEXT___________________________________________ 
+        @self.pg.production('text : QUOTE IDENTIFIER QUOTE')
+        def text(p):
+            return p[1]
 
         @self.pg.error
         def error_handle(token):
