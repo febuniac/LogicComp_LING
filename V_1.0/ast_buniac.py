@@ -1,3 +1,32 @@
+
+
+#_________SYMBOLTABLE________________________
+class SymbolTable():
+    def __init__(self):
+        self.table = {}
+        self.father = None
+
+    def get_var(self, varname):
+        if varname not in self.table.keys():
+            if self.father:
+                return self.father.get_var(varname)
+            else:
+                raise ValueError(f"Variable {varname} does not exist!")
+        else:
+            return self.table[varname]
+
+    def set_var(self, varname, value, on_father=False):
+        if varname not in self.table.keys():
+            if self.father:
+                if self.father.set_var(varname, value, on_father=True):
+                    return True
+        else:
+            self.table[varname] = value
+            return True
+
+        if not on_father:
+            self.table[varname] = value
+
 #_________NUMBER________________________
 class Number():
     def __init__(self, value):
@@ -26,6 +55,11 @@ class Sum(BinaryOp):
     def eval(self):
         return self.left.eval() + self.right.eval()
 
+#_________SUB________________________
+class Sub(BinaryOp):
+    def eval(self):
+        return self.left.eval() - self.right.eval()
+
 #_________MULT________________________
 class Multiply(BinaryOp):
     def eval(self):
@@ -34,11 +68,6 @@ class Multiply(BinaryOp):
 class Divide(BinaryOp):
     def eval(self):
         return self.left.eval() / self.right.eval()
-
-#_________SUB________________________
-class Sub(BinaryOp):
-    def eval(self):
-        return self.left.eval() - self.right.eval()
 
 #_________OR________________________
 class Or(BinaryOp):
@@ -62,9 +91,9 @@ class Smaller(BinaryOp):
         return self.left.eval() < self.right.eval() 
 
 #_________EQUAL________________________
-# class Equal(BinaryOp):
-#     def eval(self):
-#         return self.left.eval() = self.right.eval()
+class Equal(BinaryOp):
+    def eval(self):
+        return self.left.eval() == self.right.eval()
 #_________DIFF________________________
 class Different(BinaryOp):
     def eval(self):
@@ -85,24 +114,24 @@ class Print():
     def eval(self):
         print(self.value.eval())
 #_________IF________________________
-class If():
-    def __init__(self, ):
+# class If():
+#     def __init__(self, ):
 
-    def eval(self):
-#_________IF-ELSE________________________ 
-class IfElse():
-    def __init__(self, ):
+#     def eval(self):
+# #_________IF-ELSE________________________ 
+# class IfElse():
+#     def __init__(self, ):
     
-    def eval(self): 
+#     def eval(self): 
 
-#_________VARDEC________________________ 
- class IfElse():
-    def __init__(self, ): 
+# #_________VARDEC________________________ 
+#  class IfElse():
+#     def __init__(self, ): 
 
-    def eval(self):
+#     def eval(self):
 
-#_________FUNCCALL________________________ 
- class Funccall():
-    def __init__(self, ): 
+# #_________FUNCCALL________________________ 
+#  class Funccall():
+#     def __init__(self, ): 
     
-    def eval(self): 
+#     def eval(self): 

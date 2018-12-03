@@ -1,0 +1,19 @@
+num = randrange(1, 100);
+tries = 0;
+
+P: ("Guess the number (1 - 100)\n\n");
+
+F: {
+	tries +=1;
+	guess = int(ask(format("Guess (attempt: %d): ", tries)));
+	
+	I: guess == num {
+		P: (format("You guessed right with %d attempts", tries));
+		B;
+	} E: I: guess > num {
+		P:( "You guessed too high");
+	} E: {
+		P: ("You guessed too low");
+	}
+	P:("\n");
+}

@@ -54,6 +54,8 @@ class Lexer():
         self.lexer.add('FUNC', r'F')
         # Main
         self.lexer.add('MAIN', r'M')
+        # Identifier
+        self.lexer.add('IDENTIFIER', "[a-zA-Z_][a-zA-Z0-9_]*")
         # Ignore spaces
         self.lexer.ignore('\s+')
 

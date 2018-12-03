@@ -1,6 +1,6 @@
 #https://rply.readthedocs.io/en/latest/users-guide/parsers.html
 from rply import ParserGenerator
-from ast_buniac import (Number,String,BinaryOp,UnOp Sum, Sub, Multiply,Divide,Or,And,Not,Bigger,Smaller,Different,Plus,Minus, Print,If,IfElse)
+from ast_buniac import (Number, String, BinaryOp, UnOp, Sum, Sub, Multiply, Divide, Or, And, Not, Bigger, Smaller, Different, Plus, Minus, Print, )#If, IfElse
 
 class Parser():
     def __init__(self):
@@ -12,7 +12,7 @@ class Parser():
         
         precedence=[
             ('left', ['PLUS', 'MINUS']),
-            ('left', ['MUL', 'DIV'])
+            ('left', ['MULT', 'DIV']),
             ('left', ['AND', 'OR'])]
         )
 #___________PROGRAM___________________________________________ 
@@ -26,10 +26,10 @@ class Parser():
 #     : 'f', variable , "(", variable, {",", variable} ,")" ,':'
 #     |'{',statement ,'}'   
 #     ;
-    @self.pg.production('statement : FUNC variable OPEN_PAREN variable OPEN_KEY COMMA variable CLOSE_KEY CLOSE_PAREN DOTS')
-    def function(p):
+        @self.pg.production('statement : FUNC variable OPEN_PAREN variable OPEN_KEY COMMA variable CLOSE_KEY CLOSE_PAREN DOTS')
+        def function(p):
             return Function(p[1],p[3],p[5])
-    @self.pg.production('statement : OPEN_KEY statement CLOSE_KEY')
+    # @self.pg.production('statement : OPEN_KEY statement CLOSE_KEY')
 
  #_____________STATEMENT___________________________________________  
 #     statement
@@ -40,7 +40,7 @@ class Parser():
 #    | atribution
 #    ;''
         @self.pg.production('statement : IF paren_expression OPEN_KEY statement CLOSE_KEY DOTS')
-        def statement_if(p):
+        def statement_if(p):   
             return If( p[1], p[3])
         @self.pg.production('statement : IF paren_expression OPEN_KEY statement CLOSE_KEY ELSE  OPEN_KEY statement CLOSE_KEY DOTS')
         def statement_if_else(p):
@@ -137,7 +137,7 @@ class Parser():
     #    : factor, '*', factor
     #    | factor, '/', factor
     #    ;
-        @self.pg.production('term : factor MULT factor',precedence='MUL')
+        @self.pg.production('term : factor MULT factor',precedence='MULT')
         @self.pg.production('term : factor DIV factor',precedence='DIV')
         def term(p):
             left = p[0]
