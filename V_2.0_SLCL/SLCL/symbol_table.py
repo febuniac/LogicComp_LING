@@ -1,168 +1,72 @@
-import ply.lex as lex
-import mamba.exceptions
-
-reserved = {
-    'I': 'IF',
-    'E': 'ELSE',
-
-    'F': 'FOR',
-    'in': 'IN',
-    'W': 'WHILE',
-    'Ex': 'EXIT',
-
-    'Fu': 'FUNCTION',
-    'R': 'RETURN',
-
-    'P': 'PRINT',
-
-    'A': 'AND',
-    'O': 'OR',
-    'N': 'NOT',
-}
-
-tokens = [
-    'KEYWORD',
-    'STRING',
-    'NEWLINE',
-    'QUESTION_MARK',
-    #_______SYMBOLS_____________
-    'SEMICOLON',
-    'COMMA',
-    'COLON',
-    #_______OPENERS & CLOSERS_____________
-    'OPEN_PAREN',
-    'CLOSE_PAREN',
-    'LSQBRACK',
-    'RSQBRACK',
-    'OPEN_KEY',
-    'CLOSE_KEY',
-    #_______ARITHMETIC OPERATORS_____________
-    'PLUS',
-    'EXP',
-    'MINUS',
-    'MULT',
-    'DIV',
-    'MOD',
-    'ASSIGN',
-    #_______RELATIONAL OPERATORS_____________
-    'EQUAL_TO',
-    'DIFF',
-    'GREATER_THAN',
-    'GREATER_THAN_EQUAL',
-    'LESS_THAN',
-    'LESS_THAN_EQUAL',
-    'IDENTIFIER',
-    'NUM_INT',
-    'NUM_FLOAT',
-    'PLUS_EQ',
-    'MINUS_EQ',
-    'MULT_EQ',
-    #_______BOOLEAN OPERATORS_____________
-    'BIT_AND',
-    'BIT_OR',
-    'BIT_XOR',
-    'BIT_NEG',
-    'TRUE',
-    'FALSE',
-
-] + list(reserved.values())
+from slcl.exceptions import *
 
 
-t_QUESTION_MARK = r'\?'
-t_ignore_WS = r'\s+'
-t_ignore_COMMENTS = r'//.+'
+class SymbolTable:
+    __func = 'functions'
+    __sym = 'symbols'
+    __local = 'local'
 
-#_______SYMBOLS_____________
-t_COMMA = ','
-t_COLON = ':'
-t_SEMICOLON = ';'
+    __table = {
+        __func: {},
+        __sym: {},
+        __local: []
+    }
 
-#_______OPENERS & CLOSERS_____________
-t_OPEN_PAREN = r'\('
-t_CLOSE_PAREN = r'\)'
-t_OPEN_KEY = '{'
-t_CLOSE_KEY = '}'
-t_LSQBRACK = r'\['
-t_RSQBRACK = r'\]'
-#_______ARITHMETIC OPERATORS_____________
-t_PLUS = r'\+'
-t_MINUS = '-'
-t_MULT = r'\*'
-t_DIV = r'/'
-t_EXP = r'\*\*'
-t_MOD = '%'
-t_ASSIGN = '='
+    def __is_local(self):
+        '''
+        Returns true if symbol table is being called from inside
+        a function rather than the global scope
 
-#_______RELATIONAL OPERATORS_____________
-t_EQUAL_TO = '=='
-t_DIFF = '!='
-t_GREATER_THAN = '>'
-t_GREATER_THAN_EQUAL = '>='
-t_LESS_THAN = '<'
-t_LESS_THAN_EQUAL = '<='
-t_PLUS_EQ = r'\+='
-t_MINUS_EQ = r'-='
-t_MULT_EQ = r'\*='
+        :return: bool
+        '''
+        return len(self.__table[self.__local]) > 0
 
-#_______BOOLEAN OPERATORS_____________
-t_BIT_AND = r'\&'
-t_BIT_OR = r'\|'
-t_BIT_XOR = r'\^'
-t_BIT_NEG = r'~'
+    def table(self):
+        return self.__table
 
+    def get_local_table(self):
+        '''
+        Returns the active local symbol table (the last one on the stack)
+        '''
 
+        t = self.__table[self.__local]
 
+        return t[len(t) - 1]
 
-def t_NEWLINE(t):
-    r'\n'
-    t.lexer.lineno += 1
-    t.lexer.linepos = 0
-    pass
+    def set_local(self, flag):
+        if flag:
+            self.__table[self.__local].append({})
+        else:
+            self.__table[self.__local].pop()
 
+    def get_sym(self, sym):
+        if self.__is_local():
+            # Check all the local symbol tables starting from the current one
+            for tab in reversed(self.__table[self.__local]):
+                if sym in tab:
+                    return tab[sym]
 
-def t_TRUE(t):
-    'Tr'
-    t.value = True
-    return t
+        # if not found check the global scope
+        if sym in self.__table[self.__sym]:
+            return self.__table[self.__sym][sym]
 
+        # nope... sorry :(
+        raise SymbolNotFound("Undefined variable '%s'" % sym)
 
-def t_FALSE(t):
-    'Fa'
-    t.value = False
-    return t
+    def set_sym(self, sym, val):
+        if self.__is_local():
+            self.get_local_table()[sym] = val
+        else:
+            self.__table[self.__sym][sym] = val
 
+    def get_func(self, name):
+        if name in self.__table[self.__func]:
+            return self.__table[self.__func][name]
 
-def t_IDENTIFIER(t):
-    r'[\$_a-zA-Z]\w*'
+        raise SymbolNotFound("Undefined function '%s'" % name)
 
-    t.type = reserved.get(t.value, t.type)
+    def set_func(self, name, val):
+        if name in self.__table[self.__func]:
+            raise DuplicateSymbol("Cannot redeclare function '%s'" % name)
 
-    return t
-
-
-def t_NUM_FLOAT(t):
-    r'\d*\.\d+'
-    t.value = float(t.value)
-    return t
-
-
-def t_NUM_INT(t):
-    r'\d+'
-    t.value = int(t.value)
-    return t
-
-
-def t_STRING(t):
-    r'"(?:\\"|.)*?"'
-
-    # hiqen thonjezat dhe karakteret e escape
-    t.value = bytes(t.value.lstrip('"').rstrip('"'), "utf-8").decode("unicode_escape")
-
-    return t
-
-
-def t_error(t):
-    raise mamba.exceptions.UnexpectedCharacter("Unexpected character '%s' at line %d" % (t.value[0], t.lineno))
-
-
-lexer = lex.lex()
+        self.__table[self.__func][name] = val

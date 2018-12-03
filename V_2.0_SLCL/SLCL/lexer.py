@@ -1,20 +1,15 @@
 import ply.lex as lex
-import mamba.exceptions
+import slcl.exceptions
 
 reserved = {
     'I': 'IF',
     'E': 'ELSE',
-
     'F': 'FOR',
-    'in': 'IN',
     'W': 'WHILE',
-    'Ex': 'EXIT',
-
-    'Fu': 'FUNCTION',
+    'B': 'BREAK',
+    'f': 'FUNCTION',
     'R': 'RETURN',
-
     'P': 'PRINT',
-
     'A': 'AND',
     'O': 'OR',
     'N': 'NOT',
@@ -24,7 +19,6 @@ tokens = [
     'KEYWORD',
     'STRING',
     'NEWLINE',
-    'QUESTION_MARK',
     #_______SYMBOLS_____________
     'SEMICOLON',
     'COMMA',
@@ -32,8 +26,6 @@ tokens = [
     #_______OPENERS & CLOSERS_____________
     'OPEN_PAREN',
     'CLOSE_PAREN',
-    'LSQBRACK',
-    'RSQBRACK',
     'OPEN_KEY',
     'CLOSE_KEY',
     #_______ARITHMETIC OPERATORS_____________
@@ -51,7 +43,7 @@ tokens = [
     'GREATER_THAN_EQUAL',
     'LESS_THAN',
     'LESS_THAN_EQUAL',
-    'IDENTIFIER',
+    'VARIABLE',
     'NUM_INT',
     'NUM_FLOAT',
     'PLUS_EQ',
@@ -65,10 +57,9 @@ tokens = [
     'TRUE',
     'FALSE',
 
+
 ] + list(reserved.values())
 
-
-t_QUESTION_MARK = r'\?'
 t_ignore_WS = r'\s+'
 t_ignore_COMMENTS = r'//.+'
 
@@ -82,8 +73,7 @@ t_OPEN_PAREN = r'\('
 t_CLOSE_PAREN = r'\)'
 t_OPEN_KEY = '{'
 t_CLOSE_KEY = '}'
-t_LSQBRACK = r'\['
-t_RSQBRACK = r'\]'
+
 #_______ARITHMETIC OPERATORS_____________
 t_PLUS = r'\+'
 t_MINUS = '-'
@@ -112,7 +102,6 @@ t_BIT_NEG = r'~'
 
 
 
-
 def t_NEWLINE(t):
     r'\n'
     t.lexer.lineno += 1
@@ -132,7 +121,7 @@ def t_FALSE(t):
     return t
 
 
-def t_IDENTIFIER(t):
+def t_VARIABLE(t):
     r'[\$_a-zA-Z]\w*'
 
     t.type = reserved.get(t.value, t.type)
@@ -162,7 +151,7 @@ def t_STRING(t):
 
 
 def t_error(t):
-    raise mamba.exceptions.UnexpectedCharacter("Unexpected character '%s' at line %d" % (t.value[0], t.lineno))
+    raise slcl.exceptions.UnexpectedCharacter("Unexpected character '%s' at line %d" % (t.value[0], t.lineno))
 
 
 lexer = lex.lex()

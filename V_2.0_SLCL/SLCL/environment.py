@@ -1,168 +1,118 @@
-import ply.lex as lex
-import mamba.exceptions
-
-reserved = {
-    'I': 'IF',
-    'E': 'ELSE',
-
-    'F': 'FOR',
-    'in': 'IN',
-    'W': 'WHILE',
-    'Ex': 'EXIT',
-
-    'Fu': 'FUNCTION',
-    'R': 'RETURN',
-
-    'P': 'PRINT',
-
-    'A': 'AND',
-    'O': 'OR',
-    'N': 'NOT',
-}
-
-tokens = [
-    'KEYWORD',
-    'STRING',
-    'NEWLINE',
-    'QUESTION_MARK',
-    #_______SYMBOLS_____________
-    'SEMICOLON',
-    'COMMA',
-    'COLON',
-    #_______OPENERS & CLOSERS_____________
-    'OPEN_PAREN',
-    'CLOSE_PAREN',
-    'LSQBRACK',
-    'RSQBRACK',
-    'OPEN_KEY',
-    'CLOSE_KEY',
-    #_______ARITHMETIC OPERATORS_____________
-    'PLUS',
-    'EXP',
-    'MINUS',
-    'MULT',
-    'DIV',
-    'MOD',
-    'ASSIGN',
-    #_______RELATIONAL OPERATORS_____________
-    'EQUAL_TO',
-    'DIFF',
-    'GREATER_THAN',
-    'GREATER_THAN_EQUAL',
-    'LESS_THAN',
-    'LESS_THAN_EQUAL',
-    'IDENTIFIER',
-    'NUM_INT',
-    'NUM_FLOAT',
-    'PLUS_EQ',
-    'MINUS_EQ',
-    'MULT_EQ',
-    #_______BOOLEAN OPERATORS_____________
-    'BIT_AND',
-    'BIT_OR',
-    'BIT_XOR',
-    'BIT_NEG',
-    'TRUE',
-    'FALSE',
-
-] + list(reserved.values())
+import os
+from timeit import default_timer
+import slcl
+import slcl.ast as ast
+import slcl.symbol_table
+import math
+import random
+import sys
 
 
-t_QUESTION_MARK = r'\?'
-t_ignore_WS = r'\s+'
-t_ignore_COMMENTS = r'//.+'
-
-#_______SYMBOLS_____________
-t_COMMA = ','
-t_COLON = ':'
-t_SEMICOLON = ';'
-
-#_______OPENERS & CLOSERS_____________
-t_OPEN_PAREN = r'\('
-t_CLOSE_PAREN = r'\)'
-t_OPEN_KEY = '{'
-t_CLOSE_KEY = '}'
-t_LSQBRACK = r'\['
-t_RSQBRACK = r'\]'
-#_______ARITHMETIC OPERATORS_____________
-t_PLUS = r'\+'
-t_MINUS = '-'
-t_MULT = r'\*'
-t_DIV = r'/'
-t_EXP = r'\*\*'
-t_MOD = '%'
-t_ASSIGN = '='
-
-#_______RELATIONAL OPERATORS_____________
-t_EQUAL_TO = '=='
-t_DIFF = '!='
-t_GREATER_THAN = '>'
-t_GREATER_THAN_EQUAL = '>='
-t_LESS_THAN = '<'
-t_LESS_THAN_EQUAL = '<='
-t_PLUS_EQ = r'\+='
-t_MINUS_EQ = r'-='
-t_MULT_EQ = r'\*='
-
-#_______BOOLEAN OPERATORS_____________
-t_BIT_AND = r'\&'
-t_BIT_OR = r'\|'
-t_BIT_XOR = r'\^'
-t_BIT_NEG = r'~'
+def substr(s: str, start: int, length: int):
+    return s[start:start + length]
 
 
+def str_pos(sub: str, string: str):
+    return string.index(sub)
 
 
-def t_NEWLINE(t):
-    r'\n'
-    t.lexer.lineno += 1
-    t.lexer.linepos = 0
-    pass
+def str_format(string, *args):
+    return string % tuple(args)
 
 
-def t_TRUE(t):
-    'Tr'
-    t.value = True
-    return t
+def array_push(arr: list, value):
+    arr.append(value)
 
 
-def t_FALSE(t):
-    'Fa'
-    t.value = False
-    return t
+def array_pop(arr: list):
+    return arr.pop()
 
 
-def t_IDENTIFIER(t):
-    r'[\$_a-zA-Z]\w*'
-
-    t.type = reserved.get(t.value, t.type)
-
-    return t
+def array_insert(arr: list, i: int, x):
+    arr.insert(i, x)
 
 
-def t_NUM_FLOAT(t):
-    r'\d*\.\d+'
-    t.value = float(t.value)
-    return t
+def array_remove(arr: list, i: int):
+    return arr.pop(i)
 
 
-def t_NUM_INT(t):
-    r'\d+'
-    t.value = int(t.value)
-    return t
+def array_reverse(arr: list):
+    arr.reverse()
 
 
-def t_STRING(t):
-    r'"(?:\\"|.)*?"'
+def array_sort(arr: list):
+    arr.sort()
 
-    # hiqen thonjezat dhe karakteret e escape
-    t.value = bytes(t.value.lstrip('"').rstrip('"'), "utf-8").decode("unicode_escape")
+def file_close(f):
+    f.close()
 
-    return t
+def file_write(f, data):
+    f.write(data)
+
+def file_read(f, size = None):
+    return f.read(size)
+
+def file_seek(f, offset):
+    return f.seek(offset)
+
+def file_pos(f):
+    return f.tell()
+
+def file_exists(f):
+    return os.path.isfile(f)
 
 
-def t_error(t):
-    raise mamba.exceptions.UnexpectedCharacter("Unexpected character '%s' at line %d" % (t.value[0], t.lineno))
+def declare_env(s: slcl.symbol_table.SymbolTable):
+    f = ast.BuiltInFunction
+
+    # "constants"
+    s.set_sym('pi', math.pi)
+    s.set_sym('e', math.e)
+
+    # globals
+    s.set_sym('argv', sys.argv)
+
+    # Built in functions
+
+    # math
+    s.set_func('int', f(int))
+    s.set_func('float', f(float))
+    s.set_func('round', f(round))
+    s.set_func('abs', f(abs))
+    s.set_func('log', f(math.log))
+    s.set_func('log2', f(math.log))
+    s.set_func('rand', f(random.random))
+    s.set_func('randrange', f(random.randrange))
+
+    s.set_func('sin', f(math.sin))
+    s.set_func('cos', f(math.cos))
+    s.set_func('tan', f(math.tan))
+    s.set_func('atan', f(math.atan))
+
+    # string
+    s.set_func('substr', f(substr))
+    s.set_func('len', f(len))
+    s.set_func('pos', f(str_pos))
+    s.set_func('upper', f(str.upper))
+    s.set_func('lower', f(str.lower))
+    s.set_func('replace', f(str.replace))
+    s.set_func('format', f(str_format))
+    s.set_func('str', f(str))
+
+    # misc
+    s.set_func('chr', f(chr))
+    s.set_func('ord', f(ord))
+    s.set_func('time', f(default_timer))
 
 
-lexer = lex.lex()
+    # file
+    s.set_func('file', f(open))
+    s.set_func('file_close', f(file_close))
+    s.set_func('file_write', f(file_write))
+    s.set_func('file_read', f(file_read))
+    s.set_func('file_seek', f(file_seek))
+    s.set_func('file_pos', f(file_pos))
+    s.set_func('file_exists', f(file_exists))
+
+    # input
+    s.set_func('ask', f(input))
