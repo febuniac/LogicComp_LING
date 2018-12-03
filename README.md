@@ -5,9 +5,7 @@
 
 #### About
 Sometimes typing can be exhaustive, even more when typing repetitive words. In programming languages, reserved words become really repetitive at a certain point  and become an issue. SLCL purpose is to substitute reserved words for reserved letters, making coding easier and faster. No more typing
-`if`  --> `I` `else`--> `E`    `for`-->`F` `while` -->`W` `print`--> `P` `break`-->`B` `function`-->`f` `return`--> `R` `and`-->`A` `or` -->          `O` `not`-->          `N` 
-                            
-, now you can simply write them as one single capital letter (functions are not capital) .
+`if`  --> `I` `else`--> `E`    `for`-->`F` `while` -->`W` `print`--> `P` `break`-->`B` `function`-->`f` `return`--> `R` `and`-->`A` `or` -->          `O` `not`-->          `N`, now you can simply write them as one single capital letter (functions are not capital) .
 
 Use `SLCL` and start coding faster!
 ### Installation requirements ###
