@@ -23,8 +23,10 @@ https://pypi.org/project/ply/
 https://pypi.org/project/py2exe/
 ```
 
-
-
+## Usage
+```
+python3 slcl.py <program_name.mb>
+```
 
 ## EBNF
 ```
