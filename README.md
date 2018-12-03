@@ -1,21 +1,12 @@
 # LogicComp_LING
 
 #  SLCL 
-######Single Letter Computer Language
+###### Single Letter Computer Language
 
 #### About
-Sometimes typing can be exaustive, even more when typing repetitive words. In programming languages, reserved words become really repetitive at a certain point  and become an issue. SLCL purpose is to substitute reserved words for reserved letters, making coding easier and faster. No more typing                             
-                            `if`  -->    `I`
-                            `else`-->   `E` 
-                            `for`-->    `F`
-                            `while` --> `W`
-                            `print`-->  `P` 
-                            `break`-->  `B`
-                            `function`--> `f`
-                            `return`--> `R`
-                            `and`-->    `A`
-                            `or` -->    `O`
-                            `not`-->    `N`
+Sometimes typing can be exhaustive, even more when typing repetitive words. In programming languages, reserved words become really repetitive at a certain point  and become an issue. SLCL purpose is to substitute reserved words for reserved letters, making coding easier and faster. No more typing
+`if`  --> `I` `else`--> `E`    `for`-->`F` `while` -->`W` `print`--> `P` `break`-->`B` `function`-->`f` `return`--> `R` `and`-->`A` `or` -->          `O` `not`-->          `N` 
+                            
 , now you can simply write them as one single capital letter (functions are not capital) .
 
 Use `SLCL` and start coding faster!
@@ -265,7 +256,7 @@ return value is specified with the `R` keyword.
 
 SLCL supports `for` and `while` loops.
 
-#####For syntax
+##### For syntax
 ```
 
 F :  <expression>  {
@@ -273,7 +264,7 @@ F :  <expression>  {
 }
 ```
 
-#####While syntax
+##### While syntax
 ```
 W : < expression > {
 < statements >
@@ -285,13 +276,13 @@ All loops can be prematurely exited via the `break`(`B`keywork ) statement when 
 #### Statements ####
 
 
-#####If Syntax
+##### If Syntax
 ```
 I :  < expression > {
 < statements >
 }
 ```
-#####If  Else Syntax
+#####  If  Else Syntax
 ```
 I :  < expression > {
 < statements >
