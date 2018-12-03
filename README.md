@@ -1,30 +1,44 @@
 # LogicComp_LING
 
-## SLCL - Single Letter Computer Language
+#  SLCL 
+###### Single Letter Computer Language
+
+#### About
+Sometimes typing can be exhaustive, even more when typing repetitive words. In programming languages, reserved words become really repetitive at a certain point  and become an issue. SLCL purpose is to substitute reserved words for reserved letters, making coding easier and faster. No more typing
+`if`  --> `I` `else`--> `E`    `for`-->`F` `while` -->`W` `print`--> `P` `break`-->`B` `function`-->`f` `return`--> `R` `and`-->`A` `or` -->          `O` `not`-->          `N`, now you can simply write them as one single capital letter (functions are not capital) .
+
+Use `SLCL` and start coding faster!
 ### Installation requirements ###
 
-* Python3
-* ply
-* py2exe
+- Python3
+```
+https://www.python.org/downloads/
+```
+- ply
+```
+https://pypi.org/project/ply/
+```
+- py2exe
+```
+https://pypi.org/project/py2exe/
+```
 
-### Installation requirements ###
 
-* Python3
-* ply
-* py2exe
+
 
 ## EBNF
+```
 program
-: statement_list+
+: :statement_list+
 ;
 
 statement_list 
-: statement
+: :statement
 | statement_list statement
 ;
 
 statement
-: variable
+: :variable
 | expression
 | function_declaration
 | function_call_stat
@@ -38,7 +52,7 @@ statement
 ;
 
 expression
-: function_call_exp
+: :function_call_exp
 | arithmetics
 | booleans,
 | unary
@@ -48,55 +62,55 @@ expression
 ;
 
 function_declaration
-: 'f', variable, '(', arguments, ')', '{', statement_list, '}'
+: :'f', variable, '(', arguments, ')', '{', statement_list, '}'
 | 'f', variable, '{', statement_list,'}'
 ;
 
 function_call_stat
-:variable, '(', arguments,')',';'
+: variable, '(', arguments,')',';'
 ;
 
 
 if_statement
-: 'I',':', expression,'{' statement_list '}'
+: :'I',':', expression,'{' statement_list '}'
 | 'I',':', expression, '{', statement_list, '}', 'E',':', '{', statement_list, '}',':'
 | 'I',':',expression'{', statement_list, '}', 'E',':', if_statement 
 ;
 
 break
-: 'B', ';'
+: :'B', ';'
 ;
 
 print
-: 'P',':','(',arguments,')',';'
+: :'P',':','(',arguments,')',';'
 ;
 
 
 compounds
-: variable, '+=', expression, ';'
+: :variable, '+=', expression, ';'
 | variable, '-=', expression, ';'
 | variable, '*=', expression, ';'
 ;
 
 
 for_loop
-:'F',':',expression, '{', statement_list, '}'
+: :'F',':',expression, '{', statement_list, '}'
 ;
 
 while_loop
-:'W',':', '{', statement_list, '}'
+: :'W',':', '{', statement_list, '}'
 ;
 
 return
-: 'R' expression ';'
+: :'R' expression ';'
 ;
 
 function_call_exp
-:variable, '(', arguments,')'
+: :variable, '(', arguments,')'
 ;
 
 arithmetics
-: expression, '+', expression 
+: :expression, '+', expression 
 | expression, '-', expression 
 | expression, '*', expression 
 | expression, '/', expression 
@@ -105,24 +119,21 @@ arithmetics
 ;  
 
 bools
-: expression, '|', expression
+: :expression, '|', expression
 | expression, '&', expression
 | expression, '^',  expression
 | expression, '~',  expression
 ;
 
 unary
-: '+', expression
+: :'+', expression
 | '-', expression
 | '~', expression
 | 'N', expression
-(* | number
-| '(',expression,')'
-| variable *)
 ;
 
 paren_expression
-: '(', expression, ')'
+: :'(', expression, ')'
 ;  
 
 attribution
@@ -130,14 +141,14 @@ attribution
 ;
 
 primitive 
-: relats
+: :relats
 | number
 | string
 | simple_bool
 ;
 
 relats
-: expression, '>',  expression
+: :expression, '>',  expression
 | expression, '<',  expression
 | expression, '>=', expression
 | expression, '<=', expression
@@ -148,15 +159,15 @@ relats
 
 
 variable
-: STRING, {STRING, INT, '_'}
+: :string, {string, int, '_'}
 ;
 
 number
-: FLOAT
+: :float
 ;
 
 string
-:  "A" | "B" | "C" | "D" | "E" | "F" | "G"
+: : "A" | "B" | "C" | "D" | "E" | "F" | "G"
 | "H" | "I" | "J" | "K" | "L" | "M" | "N"
 | "O" | "P" | "Q" | "R" | "S" | "T" | "U"
 | "V" | "W" | "X" | "Y" | "Z" 
@@ -167,16 +178,17 @@ string
 ;
 
 simple_bool
-: 'Tr'
+: :'Tr'
 | 'Fa'
 ;
 float
-: INT, ['.', INT]
+: :int, ['.', int]
 ;
 
 int
-: "0"|"1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+: :"0"|"1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 ;
+```
 
 ### Features ###
 * Variables
@@ -195,105 +207,114 @@ int
 * Boolean
 
 
-
-
 ### Language description ###
+
+#### Disclaimer and Proper Credits
+This projects was based in: [Mamba programming language](https://github.com/maldoinc/mamba) made by [@maldoinc](https://github.com/maldoinc). 
 
 #### Variables ####
  Dynamically typed immediately declared upon use
- #### `number = 42;` ####
+`number = 42;` 
 
 ### Operators ###
 
 #### 
-logic: `and` `or` `not` `in` `not in` `>` `>=` `<` `<=` `==` `!=`
+relational: `and` `or` `not` `>` `>=` `<` `<=` `==` `!=`
 
 arithmetic: `+` `-` `*` `/` `**`
 
-binary: `~` `^` `|` `&` 
+booleans binary: `~` `^` `|` `&` 
+
+simple booleans: `True (Tr)` `False (Fa)`  
 
 compound: `+=` `-=` `*=`  
 
 ####
 
+
+
 #### Functions ####
 
 functions are declared via the following grammar
 
-fn func_name( [<arguments>,] ){
+```
+f func_name( arguments, ){
 < statements >
 }
 
-fn random(){
-ret 4;
+Example:
+
+f ten(){
+R 10;
 }
-
-return value is specified with the `ret` keyword which, as expected, immediately halts function execution upon being called. Functions can have their private functions which are inaccessible to the outer scope.
-
-#### Flow control ####
-
-Mamba supports `if` statements for flow control via the following syntax
-
-if < expression > {
-< statements >
-}
-
-nb: Brackets are mandatory, while parenthesis on the expression are optional
-
+```
+return value is specified with the `R` keyword.
 
 ### Loops ###
 
-Mamba supports two kind of loops, `for` and `while`
+SLCL supports `for` and `while` loops.
 
-** for syntax **
+##### For syntax
+```
 
-for variable in sequence {
+F :  <expression>  {
 < statements >
 }
+```
 
-nb: sequence accepts arrays and strings
-
-for variable in low -> high {
+##### While syntax
+```
+W : < expression > {
 < statements >
 }
+```
 
-down to loops are constructed as
+All loops can be prematurely exited via the `break`(`B`keywork ) statement when necessary.
 
-for variable in high <- low {
+#### Statements ####
+
+
+##### If Syntax
+```
+I :  < expression > {
 < statements >
 }
-
-nb: loop indexes are inclusive
-
-** while syntax **
-
-while < expression > {
+```
+#####  If  Else Syntax
+```
+I :  < expression > {
 < statements >
 }
-
-there is also the alternative `for` syntax
-
-for {
+E : < expression > {
 < statements >
 }
-
-which acts as an infinite loop (which internally is expressed as a `while true {}` statement)
-
-All loops can be prematurely exited via the `exit` statement when necessary
-
-
-### Arrays ###
-
-Arrays have dynamic length and can be declared via the  `[ ... ]` expression
-
+```
+##### Else If Syntax
+```
+I :  < expression > {
+< statements >
+}
+E : < expression > {
+< statements >
+}
+I :  < expression > {
+< statements >
+}
+```
 
 ### Printing ###
 
-Printing is supported via the `say` keyword which accepts a list of values to print. Note that `say` doesn't
-add spaces nor newlines after printing.
+Printing is supported via the `P` keyword which accepts a list of values to print. 
 
+##### Syntax
+```
+P : (<arguments>);
+```
 
 ### Standard library ###
+Extracted from [Mamba programming language](https://github.com/maldoinc/mamba).
+
+Libraries are added to the Symbol Table.
 
 #### 1. Constants ###
 
@@ -329,12 +350,6 @@ add spaces nor newlines after printing.
 * `chr(x)`
 * `ord(x)`
 * `time`
-* `array_insert(array, index, value)`
-* `array_pop(array)` *returns removed value and modifies array*
-* `array_push(array, value)`
-* `array_remove(array, index)` *returns removed value and modifies array*
-* `array_reverse(array)` *reverses array without returning it*
-* `array_sort(array)` *sorts the array without returning it*
 * `file(filename, mode)` *opens a file and returns the handle*
 * `file_close(handle)`
 * `file_write(handle, data)`
@@ -342,3 +357,11 @@ add spaces nor newlines after printing.
 * `file_seek(handle, position)`
 * `file_pos(handle)`
 * `file_exists(filename)`
+
+
+
+#### RESOURCES
+* `https://github.com/maldoinc/mamba` *inspired by*
+* `https://www.dabeaz.com/ply/ply.html` PLY
+* `https://github.com/dabeaz/ply` PLY
+
