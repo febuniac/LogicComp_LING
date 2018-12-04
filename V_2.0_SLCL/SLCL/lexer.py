@@ -144,7 +144,7 @@ def t_NUM_INT(t):
 def t_STRING(t):
     r'"(?:\\"|.)*?"'
 
-    # hiqen thonjezat dhe karakteret e escape
+
     t.value = bytes(t.value.lstrip('"').rstrip('"'), "utf-8").decode("unicode_escape")
 
     return t
